@@ -53,3 +53,85 @@ export interface AppConfiguration {
   environment?: 'development' | 'production' | 'staging';
   features?: Record<string, unknown>;
 }
+
+// ===========================
+// New Orchestration Types
+// ===========================
+
+// Column definition for database tables
+export interface ColumnDefinition {
+  name: string;
+  type: 'string' | 'number' | 'boolean' | 'date' | 'text' | 'json';
+  required: boolean;
+  unique?: boolean;
+}
+
+// Table definition for database
+export interface TableDefinition {
+  name: string;
+  columns: ColumnDefinition[];
+}
+
+// API endpoint definition
+export interface APIEndpointDefinition {
+  path: string;
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  description: string;
+  requestBody?: Record<string, unknown>;
+  responseBody?: Record<string, unknown>;
+}
+
+// UI component definition
+export interface UIComponentDefinition {
+  name: string;
+  type: 'page' | 'form' | 'list' | 'detail' | 'dashboard';
+  relatedEndpoints: string[];
+  fields?: string[];
+}
+
+// User's app request/requirements
+export interface AppRequirement {
+  name: string;
+  description: string;
+  features: string[];
+  databaseTables?: TableDefinition[];
+  apiEndpoints?: APIEndpointDefinition[];
+  uiComponents?: UIComponentDefinition[];
+}
+
+// Generated app output
+export interface GeneratedApp {
+  id: string;
+  name: string;
+  requirement: AppRequirement;
+  frontend: {
+    language: 'typescript';
+    framework: 'react';
+    code: Record<string, string>; // file paths to code
+  };
+  backend: {
+    language: 'typescript';
+    framework: 'express';
+    code: Record<string, string>;
+  };
+  database: {
+    type: 'postgresql';
+    schema: Record<string, string>;
+    migrations: Record<string, string>;
+  };
+  github: {
+    repositoryUrl?: string;
+    defaultBranch: string;
+  };
+  createdAt: Date;
+  status: 'planning' | 'generating' | 'generated' | 'deploying' | 'deployed' | 'failed';
+}
+
+// Orchestration context
+export interface OrchestrationContext {
+  appId: string;
+  requirement: AppRequirement;
+  generatedApp?: GeneratedApp;
+  currentPhase: 'planning' | 'generating' | 'deploying';
+  errors: string[];
+}

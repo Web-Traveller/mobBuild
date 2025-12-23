@@ -44,3 +44,24 @@ export interface CodeGenerator {
   generate(context: GeneratorContext): Promise<GeneratorResult>;
   validate(context: GeneratorContext): boolean;
 }
+
+// ===========================
+// New Orchestration Generator Types
+// ===========================
+
+import { OrchestrationContext } from './app';
+
+// Base code generator interface for orchestration
+export interface OrchestrationCodeGenerator {
+  name: string;
+  generate(context: OrchestrationContext): Promise<Record<string, string>>;
+  validate(context: OrchestrationContext): Promise<boolean>;
+}
+
+// Generator results for orchestration
+export interface OrchestrationGeneratorResult {
+  success: boolean;
+  files: Record<string, string>;
+  errors?: string[];
+  warnings?: string[];
+}
